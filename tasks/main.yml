@@ -1,0 +1,12 @@
+---
+# tasks file for nss-module
+
+- command: modutil -dbdir /etc/pki/nssdb -list
+  register: nss_module_probe
+  changed_when: no
+  check_mode: no
+
+- debug:
+      #{{ r.stdout }}
+    msg: >-
+      {{ nss_module_probe.stdout.split('\n\n'.decode('string_escape')) | map('regex_search', '(?s)^ ? ?[0-9]+\. (?P<module>.*?)$.*?\slibrary name: (?P<lib>.*?)$', multiline=True, groupdict=True) | select('mapping') |list}}
