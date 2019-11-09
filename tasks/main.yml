@@ -52,3 +52,55 @@
     nss_module_lib_info | selectattr('module', 'match', (nss_module_name | regex_escape) ~ '$')
     | selectattr('lib', 'match', (nss_module_lib | regex_escape) ~ '$') | list | length == 0
     and nss_module_state == 'present'
+
+- <<: *list_module
+  ignore_errors: "{{ ansible_check_mode }}"
+
+
+- name: manage slots
+  block:
+  - &list_slots
+    name: list module slots
+    command: modutil -dbdir {{ nss_module_nssdb | quote }} -list {{ nss_module_name | quote }}
+    check_mode: no
+    register: nss_module_slots_probe
+    changed_when: no
+
+  - name: enable whitelisted slots
+    command: >-
+      {{ nss_module_echo_check }}modutil -dbdir {{ nss_module_nssdb | quote }}
+      -enable {{ nss_module_name | quote }} -slot {{ item | quote }}
+    check_mode: no
+    with_items: >-
+        {{ nss_module_slot_info | selectattr('Status', 'match', 'DISABLED')
+        | selectattr('Slot', 'in', nss_module_slot_whitelist)
+        | map(attribute='Slot') | list }}
+
+  - *list_slots
+
+  - name: disable blacklisted slots
+    command: >-
+      {{ nss_module_echo_check }}modutil -dbdir {{ nss_module_nssdb | quote }}
+      -disable {{ nss_module_name | quote }} -slot {{ item | quote }}
+    check_mode: no
+    with_items: >-
+        {{ nss_module_slot_info | selectattr('Status', 'match', 'Enabled')
+        | selectattr('Slot', 'in', nss_module_slot_blacklist)
+        | map(attribute='Slot') | list }}
+
+  - *list_slots
+
+  - name: disable non-whitelisted slots
+    command: >-
+      {{ nss_module_echo_check }}modutil -dbdir {{ nss_module_nssdb | quote }}
+      -disable {{ nss_module_name | quote }} -slot {{ item | quote }}
+    check_mode: no
+    when: nss_module_slot_exclusive
+    with_items: >-
+        {{ nss_module_slot_info | selectattr('Status', 'match', 'Enabled')
+        | rejectattr('Slot', 'in', nss_module_slot_whitelist)
+        | map(attribute='Slot') | list }}
+  when: >-
+    nss_module_lib_info | selectattr('module', 'match', (nss_module_name | regex_escape) ~ '$')
+    | list | length
+    and nss_module_state == 'present'
