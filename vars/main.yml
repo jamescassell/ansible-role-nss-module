@@ -9,4 +9,11 @@ nss_module_lib_info: >-
 nss_module_re_module_lib: >-
   (?s)^ ? ?[0-9]+\. (?P<module>.*?)$.*?$\s+library name: (?P<lib>.*?)$
 
+nss_module_slot_info: >-
+    {{ (nss_module_slots_probe|d({})).stdout | d('')
+    | regex_findall(nss_module_re_slot, multiline=True) | map('from_yaml')
+    | list }}
+nss_module_re_slot: >-
+  (?:^  .*$\n)+
+
 nss_module_echo_check: "{{ ansible_check_mode | ternary('echo ', '') }}"

@@ -6,3 +6,14 @@ nss_module_lib: libnssckbi.so
 nss_module_nssdb: /etc/pki/nssdb
 nss_module_state: present
 nss_module_create_db: yes
+
+# list of slots to enable if present
+nss_module_slot_whitelist: []
+#- /etc/pki/ca-trust/source
+
+# list of slots to disable if present
+nss_module_slot_blacklist: []
+#- /usr/share/pki/ca-trust-source
+
+# whether to disable all non-whitelisted slots
+nss_module_slot_exclusive: no
