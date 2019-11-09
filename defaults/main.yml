@@ -4,7 +4,11 @@
 nss_module_name: Root Certs
 nss_module_lib: libnssckbi.so
 nss_module_nssdb: /etc/pki/nssdb
+
+# options 'present', 'absent'
 nss_module_state: present
+
+# whether to create a missing nssdb
 nss_module_create_db: yes
 
 # list of slots to enable if present
