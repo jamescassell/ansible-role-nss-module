@@ -1,2 +1,8 @@
 ---
 # defaults file for nss-module
+
+nss_module_name: Root Certs
+nss_module_lib: libnssckbi.so
+nss_module_nssdb: /etc/pki/nssdb
+nss_module_state: present
+nss_module_create_db: yes
