@@ -32,7 +32,7 @@
 
 - name: delete module from db
   command: >-
-    {{ nss_module_echo_check }}modutil -dbdir {{ nss_module_nssdb | quote }}
+    {{ nss_module_echo_check }}modutil -dbdir {{ nss_module_nssdb | quote }} -force
     -delete {{ nss_module_name | quote }}
   check_mode: no
   when: >-
@@ -45,7 +45,7 @@
 
 - name: add module to db
   command: >-
-    {{ nss_module_echo_check }}modutil -dbdir {{ nss_module_nssdb | quote }}
+    {{ nss_module_echo_check }}modutil -dbdir {{ nss_module_nssdb | quote }} -force
     -add {{ nss_module_name | quote }} -libfile {{ nss_module_lib | quote }}
   check_mode: no
   when: >-
@@ -68,7 +68,7 @@
 
   - name: enable whitelisted slots
     command: >-
-      {{ nss_module_echo_check }}modutil -dbdir {{ nss_module_nssdb | quote }}
+      {{ nss_module_echo_check }}modutil -dbdir {{ nss_module_nssdb | quote }} -force
       -enable {{ nss_module_name | quote }} -slot {{ item | quote }}
     check_mode: no
     with_items: >-
@@ -80,7 +80,7 @@
 
   - name: disable blacklisted slots
     command: >-
-      {{ nss_module_echo_check }}modutil -dbdir {{ nss_module_nssdb | quote }}
+      {{ nss_module_echo_check }}modutil -dbdir {{ nss_module_nssdb | quote }} -force
       -disable {{ nss_module_name | quote }} -slot {{ item | quote }}
     check_mode: no
     with_items: >-
@@ -92,7 +92,7 @@
 
   - name: disable non-whitelisted slots
     command: >-
-      {{ nss_module_echo_check }}modutil -dbdir {{ nss_module_nssdb | quote }}
+      {{ nss_module_echo_check }}modutil -dbdir {{ nss_module_nssdb | quote }} -force
       -disable {{ nss_module_name | quote }} -slot {{ item | quote }}
     check_mode: no
     when: nss_module_slot_exclusive
