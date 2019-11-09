@@ -61,5 +61,5 @@ class FilterModule(object):
 
     def filters(self):
         return {
-            'regex_search': regex_search,
+            'regex_search_with_groupdict': regex_search,
         }

@@ -3,7 +3,7 @@
 
 nss_module_lib_info: >-
   {{ nss_module_probe.stdout.split('\n\n'.encode().decode('unicode_escape'))
-  | map('regex_search', nss_module_re_module_lib, multiline=True, groupdict=True)
+  | map('regex_search_with_groupdict', nss_module_re_module_lib, multiline=True, groupdict=True)
   | select('mapping') | list }}
 
 nss_module_re_module_lib: >-
