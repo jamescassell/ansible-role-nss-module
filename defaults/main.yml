@@ -1,8 +1,11 @@
 ---
 # defaults file for nss-module
 
+# the nick name for the module
 nss_module_name: Root Certs
+# the library path for the module
 nss_module_lib: libnssckbi.so
+# the path to the nssdb to be managed
 nss_module_nssdb: /etc/pki/nssdb
 
 # options 'present', 'absent'
